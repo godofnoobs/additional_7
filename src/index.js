@@ -2,7 +2,7 @@ var dim = 9;
 var reference = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 var def = [1, 1, 1, 1, 1, 1, 1, 1, 1];
 
-var initial = [
+/*var initial = [
     [0, 5, 0, 0, 7, 0, 0, 0, 1],
     [8, 7, 6, 0, 2, 1, 9, 0, 3],
     [0, 0, 0, 0, 3, 5, 0, 0, 0],
@@ -24,28 +24,26 @@ initial = [
     [0, 0, 0, 7, 5, 0, 0, 2, 1],
     [0, 0, 0, 8, 1, 0, 0, 6, 3],
     [8, 0, 0, 0, 0, 3, 0, 0, 0]
-  ];
+];
 
- e = [[3, 5, 4, 9, 7, 6, 8, 2, 1],
-      [8, 7, 6, 4, 2, 1, 9, 5, 3],
-      [9, 2, 1, 8, 3, 5, 4, 7, 6],
-      [7, 9, 8, 2, 4, 3, 6, 1, 5],
-      [5, 4, 3, 6, 1, 9, 7, 8, 2],
-      [6, 1, 2, 7, 5, 8, 3, 9, 4],
-      [2, 8, 9, 5, 6, 4, 1, 3, 7],
-      [4, 3, 5, 1, 8, 7, 2, 6, 9],
-      [1, 6, 7, 3, 9, 2, 5, 4, 8]];
-  
-  var z = [];
+e = [[3, 5, 4, 9, 7, 6, 8, 2, 1],
+    [8, 7, 6, 4, 2, 1, 9, 5, 3],
+    [9, 2, 1, 8, 3, 5, 4, 7, 6],
+    [7, 9, 8, 2, 4, 3, 6, 1, 5],
+    [5, 4, 3, 6, 1, 9, 7, 8, 2],
+    [6, 1, 2, 7, 5, 8, 3, 9, 4],
+    [2, 8, 9, 5, 6, 4, 1, 3, 7],
+    [4, 3, 5, 1, 8, 7, 2, 6, 9],
+    [1, 6, 7, 3, 9, 2, 5, 4, 8]];
 
-//module.exports = function solveSudoku(inp) {
-function solveSudoku(inp) {
-    
-    var matrix = initial;
-    res = recursiveTry(matrix);
-//    console.log('DIIIIIICk');
-//    console.log(res);
-    return z;
+var z = [];
+*/
+module.exports = function solveSudoku(inp) {
+//function solveSudoku(inp) {
+
+    var matrix = inp;
+    res = recursiveTry(matrix, inp);
+    return res;
 }
 
 function coordGetAll(dim) {
@@ -184,7 +182,7 @@ function changeArr(matrix, arr) {
     return res;
 }
 
-function recursiveTry(matrix, arr, step) {
+function recursiveTry(matrix, inp, arr, step) {
     if (!step)
         var step = 0;
     if (step > 10)
@@ -193,30 +191,32 @@ function recursiveTry(matrix, arr, step) {
     if (!arr) {
         var newArr = findPairs(newMatrix);
         //console.log(arr);
-    }
-    else {
+    } else {
         var newArr = changeArr(newMatrix, arr);
     }
     if (isFilled(newMatrix)) {
-        if (isSolved(initial, newMatrix)) {
+        if (isDone(inp, newMatrix)) {
             z = copyMatrix(newMatrix, dim)
-            return newMatrix;}
-        else
+            return newMatrix;
+        } else
             return false;
     }
-    
-    console.log('---------   ' + step);
-    
-    if (newArr.length && newArr[0][0].length) {
+
+    //console.log('---------   ' + step);
+
+    if (newArr.length) {
         setTry(newMatrix, newArr[0][1], newArr[0][0].pop());
-        if (!recursiveTry(newMatrix, newArr, step++)) {
+        var mt = (!recursiveTry(newMatrix, inp, newArr, step++))
+        if (!mt) {
             if (newArr.length && newArr[0][0].length) {
                 setTry(newMatrix, newArr[0][1], newArr[0][0].pop());
-                return recursiveTry(newMatrix, newArr, step++);
+                return recursiveTry(newMatrix, inp, newArr, step++);
             }
-        else return recursiveTry(newMatrix, newArr, step);
+            else
+                false;
         }
-    else return false;
+        else
+            return mt;
     }
 
 }
@@ -271,13 +271,13 @@ function solveTry(matrix) {
 
 
     matrix.forEach(function (i) {
-        console.log(i);
+        //console.log(i);
     });
 
     return matrix;
 }
 
-function isSolved(initial, sudoku) {
+function isDone(init, sudoku) {
     for (var i = 0; i < 9; i++) {
         var r = Math.floor(i / 3) * 3,
                 c = (i % 3) * 3;
@@ -288,7 +288,7 @@ function isSolved(initial, sudoku) {
                 )
             return false;
     }
-    return initial.every((row, rowIndex) => {
+    return init.every((row, rowIndex) => {
         return row.every((num, colIndex) => {
             return num === 0 || sudoku[rowIndex][colIndex] === num;
         });
@@ -315,4 +315,4 @@ function countZeros(matrix) {
 //solveSudoku(initial);
 //console.log(z);
 
-alert(isSolved(initial, solveSudoku(initial)));
+//alert(isSolved(initial, solveSudoku(initial)));
