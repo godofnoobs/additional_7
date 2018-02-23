@@ -22,10 +22,11 @@ module.exports = function solveSudoku(inp) {
     var matrix = inp;
     var res;
     var temp;
-
+    // Try to make it simple
     var newMatrix = copyMatrix(solveTry(matrix), dim);
     solveTry(newMatrix);
     if (isDone(inp, newMatrix)) return newMatrix;
+    // Best practice
     var newArr = findPairs(newMatrix);
     for (var i = 0; i < newArr.length; i++) {
         console.log(newArr);
@@ -34,6 +35,18 @@ module.exports = function solveSudoku(inp) {
         temp = newArr.shift();
         newArr.push(temp);
     }
+
+    // dirty hack for very hard ))
+    if (!res) {
+    var newArr = findThrees(newMatrix);
+    for (var i = 0; i < newArr.length; i++) {
+        console.log(newArr);
+        res = recursiveTry(newMatrix, inp, newArr, 2);
+        if (res) break;
+        temp = newArr.shift();
+        newArr.push(temp);
+    }}
+
 
     console.log('RESULT');
     //for (var i in res) console.log(res[i]);
@@ -163,7 +176,7 @@ function findPairs(matrix) {
     return res;
 }
 function findThrees(matrix) {
-    alert('Threes');
+    //alert('Threes');
     var coordAll = coordGetAll(dim);
     var res = [];
     for (var i = 0; i < coordAll.length; i++) {
